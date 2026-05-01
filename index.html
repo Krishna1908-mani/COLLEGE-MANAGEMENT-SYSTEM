@@ -1,0 +1,1466 @@
+html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIMS — Vignan Institute Management System</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#0d1b2a;--navy2:#1a2e44;--navy3:#243d57;
+  --gold:#c9a84c;--gold2:#e8c97a;--gold3:#f5dfa0;
+  --cream:#fdf8ef;--cream2:#f7f0e0;
+  --white:#fff;--off:#f5f7fc;
+  --border:#e4e8f0;--muted:#7a8499;--text:#1a2233;
+  --ok:#16a34a;--ok-bg:#dcfce7;--err:#dc2626;--err-bg:#fee2e2;
+  --warn:#d97706;--warn-bg:#fef3c7;--info:#2563eb;--info-bg:#dbeafe;
+  --sb:260px;--r:12px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--off);color:var(--text);min-height:100vh;}
+
+/* ─── LOGIN PAGE ─── */
+.login-page {
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  background: var(--navy);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background mesh */
+.login-page::before {
+  content:'';
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 50%, rgba(201,168,76,0.09) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 80% 20%, rgba(37,99,235,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 70% 80%, rgba(201,168,76,0.05) 0%, transparent 50%);
+  pointer-events:none;
+}
+
+/* Subtle grid */
+.login-page::after {
+  content:'';
+  position:absolute;inset:0;
+  background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events:none;
+}
+
+/* ─── TOP NAV BAR ─── */
+.login-nav {
+  position: relative;z-index:10;
+  display:flex;align-items:center;justify-content:space-between;
+  padding: 20px 48px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.nav-brand { display:flex;align-items:center;gap:12px; }
+.nav-logo {
+  width:40px;height:40px;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold2) 100%);
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:600;color:var(--navy);
+  box-shadow: 0 0 0 2px rgba(201,168,76,0.2), 0 4px 16px rgba(0,0,0,0.3);
+}
+.nav-title { font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:#fff;letter-spacing:-0.2px; }
+.nav-sub { font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:1.4px;text-transform:uppercase;margin-top:1px; }
+.nav-badges { display:flex;align-items:center;gap:10px; }
+.nav-badge {
+  display:flex;align-items:center;gap:6px;
+  padding:6px 14px;border-radius:20px;
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);
+  font-size:12px;color:rgba(255,255,255,0.6);
+}
+.nav-badge svg { width:13px;height:13px;opacity:0.7; }
+.nav-actions{display:flex;align-items:center;gap:12px;}
+.nav-link{font-size:13px;color:rgba(255,255,255,0.78);background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);padding:10px 16px;border-radius:14px;cursor:pointer;transition:background 0.18s, color 0.18s;}
+.nav-link:hover{background:rgba(255,255,255,0.16);color:#fff;}
+
+/* ─── HERO SECTION ─── */
+.login-hero {
+  position:relative;z-index:5;
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;
+  padding: 52px 20px 36px;
+  flex-direction:column;
+  animation: heroIn 0.8s var(--ease-out) both;
+}
+@keyframes heroIn {
+  from { opacity:0; transform:translateY(24px); }
+  to { opacity:1; transform:translateY(0); }
+}
+.hero-eyebrow {
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.25);
+  color:var(--gold2);font-size:11px;letter-spacing:1.2px;text-transform:uppercase;font-weight:500;
+  padding:6px 16px;border-radius:20px;margin-bottom:22px;
+}
+.eyebrow-dot { width:6px;height:6px;background:var(--gold2);border-radius:50%;animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.3)} }
+.hero-h1 {
+  font-family:'Fraunces',serif;font-size:clamp(32px,5vw,54px);
+  font-weight:700;color:#fff;line-height:1.12;letter-spacing:-1px;
+  margin-bottom:18px;max-width:700px;
+}
+.hero-h1 em { font-style:italic;color:var(--gold2); }
+.hero-sub {
+  font-size:16px;color:rgba(255,255,255,0.48);line-height:1.7;
+  max-width:480px;margin-bottom:36px;font-weight:300;
+}
+
+/* ─── SOCIAL PROOF STRIP ─── */
+.proof-strip {
+  display:flex;align-items:center;gap:0;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:14px;padding:0;
+  overflow:hidden;margin-bottom:40px;
+  animation: fadeUp 0.9s 0.2s var(--ease-out) both;
+}
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+.proof-item {
+  display:flex;align-items:center;gap:10px;
+  padding: 16px 28px;
+  flex:1;border-right:1px solid rgba(255,255,255,0.07);
+}
+.proof-item:last-child { border-right:none; }
+.proof-num {
+  font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;color:var(--gold2);
+  line-height:1;
+}
+.proof-lbl { font-size:11px;color:rgba(255,255,255,0.38);line-height:1.4;text-transform:uppercase;letter-spacing:0.6px; }
+.proof-icon { font-size:22px;opacity:0.7; }
+
+/* ─── AVATAR STACK ─── */
+.avatar-proof {
+  display:flex;align-items:center;gap:10px;margin-bottom:44px;
+  animation: fadeUp 0.9s 0.3s var(--ease-out) both;
+}
+.avatar-stack { display:flex; }
+.av-img {
+  width:32px;height:32px;border-radius:50%;
+  border:2px solid var(--navy);
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:600;color:#fff;
+  margin-left:-10px;
+}
+.av-img:first-child { margin-left:0; }
+.av-img.av2 { background:linear-gradient(135deg,#f093fb,#f5576c); }
+.av-img.av3 { background:linear-gradient(135deg,#4facfe,#00f2fe); }
+.av-img.av4 { background:linear-gradient(135deg,#43e97b,#38f9d7); }
+.av-img.av5 { background:linear-gradient(135deg,#fa709a,#fee140); }
+.av-text { font-size:13px;color:rgba(255,255,255,0.5); }
+.av-text b { color:rgba(255,255,255,0.85);font-weight:600; }
+
+/* ─── DUAL LOGIN CARDS ─── */
+.login-cards-wrap {
+  position:relative;z-index:5;
+  display:flex;justify-content:center;gap:20px;
+  padding: 0 20px 48px;
+  flex-wrap: wrap;
+  animation: cardsIn 1s 0.15s var(--ease-out) both;
+}
+@keyframes cardsIn {
+  from { opacity:0; transform:translateY(30px) scale(0.97); }
+  to { opacity:1; transform:translateY(0) scale(1); }
+}
+
+.login-card {
+  width: 380px;
+  background: rgba(255,255,255,0.97);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.3);
+  box-shadow: 0 24px 64px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.05) inset;
+  padding: 32px 32px 28px;
+  position:relative;overflow:hidden;
+  transition: transform 0.3s var(--ease-out), box-shadow 0.3s;
+}
+.login-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 32px 80px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.08) inset;
+}
+
+/* Gold accent card (student - featured) */
+.login-card.card-featured::before {
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg, var(--gold) 0%, var(--gold2) 50%, var(--gold3) 100%);
+}
+.login-card.card-faculty::before {
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg, #3b82f6 0%, #6366f1 100%);
+}
+
+.card-popular-badge {
+  position:absolute;top:18px;right:18px;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:var(--navy);font-size:10px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;
+  padding:4px 10px;border-radius:20px;
+}
+
+.card-header { display:flex;align-items:center;gap:14px;margin-bottom:22px; }
+.card-icon {
+  width:48px;height:48px;border-radius:13px;
+  display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;
+}
+.card-icon.student-icon { background:linear-gradient(135deg,#fdf3dc,#f5e6b8); }
+.card-icon.faculty-icon { background:linear-gradient(135deg,#dbeafe,#bfdbfe); }
+.card-type { font-family:'Fraunces',serif;font-size:21px;font-weight:600;color:var(--navy);line-height:1; }
+.card-tagline { font-size:12px;color:var(--muted);margin-top:3px; }
+
+/* Benefits row */
+.card-benefits {
+  display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap;
+}
+.benefit-pill {
+  display:flex;align-items:center;gap:5px;
+  background:var(--off);border:1px solid var(--border);
+  border-radius:20px;padding:4px 10px;
+  font-size:11px;color:#4a5568;font-weight:500;
+}
+.benefit-pill svg { width:10px;height:10px;color:var(--ok);flex-shrink:0; }
+
+/* Form fields */
+.lf-group { margin-bottom:14px; }
+.lf-label {
+  display:block;font-size:11px;font-weight:600;
+  color:var(--muted);letter-spacing:0.6px;text-transform:uppercase;margin-bottom:5px;
+}
+.lf-input {
+  width:100%;padding:11px 14px;
+  border:1.5px solid var(--border);border-radius:10px;
+  font-size:14px;font-family:'DM Sans',sans-serif;color:var(--text);
+  background:#fff;outline:none;
+  transition:border-color 0.18s, box-shadow 0.18s;
+}
+.lf-input:focus {
+  border-color:var(--navy);
+  box-shadow:0 0 0 3px rgba(13,27,42,0.07);
+}
+.lf-input.faculty-focus:focus {
+  border-color:#3b82f6;
+  box-shadow:0 0 0 3px rgba(59,130,246,0.1);
+}
+.lf-row { display:flex;align-items:center;justify-content:space-between;margin-bottom:4px; }
+.lf-forgot { font-size:11px;color:var(--info);cursor:pointer;font-weight:500; }
+.lf-forgot:hover { text-decoration:underline; }
+
+/* Demo hint */
+.demo-hint {
+  background:linear-gradient(135deg,#fdf3dc,#fef9ec);
+  border:1px solid rgba(201,168,76,0.3);border-radius:9px;
+  padding:10px 13px;margin-bottom:16px;
+  display:flex;align-items:flex-start;gap:8px;
+}
+.demo-hint.blue-hint {
+  background:linear-gradient(135deg,#eff6ff,#dbeafe);
+  border-color:rgba(59,130,246,0.25);
+}
+.demo-hint-icon { font-size:14px;margin-top:1px;flex-shrink:0; }
+.demo-hint-text { font-size:11.5px;color:#6b5e3a;line-height:1.55; }
+.demo-hint.blue-hint .demo-hint-text { color:#1e3a5f; }
+.demo-hint-text b { font-weight:700;font-family:'JetBrains Mono',monospace;font-size:11px; }
+
+/* Error */
+.lf-err { font-size:12px;color:var(--err);margin-bottom:10px;display:none;padding:8px 12px;background:var(--err-bg);border-radius:7px;border-left:3px solid var(--err); }
+
+/* CTA Button */
+.cta-btn {
+  width:100%;padding:14px 20px;
+  border:none;border-radius:11px;
+  font-size:15px;font-weight:600;font-family:'DM Sans',sans-serif;
+  cursor:pointer;letter-spacing:0.1px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:all 0.2s var(--ease-out);
+  position:relative;overflow:hidden;
+}
+.cta-btn::after {
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(rgba(255,255,255,0.1),rgba(255,255,255,0));
+  opacity:0;transition:opacity 0.2s;
+}
+.cta-btn:hover::after { opacity:1; }
+.cta-btn:active { transform:scale(0.98); }
+
+.cta-student {
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);
+  color:#fff;
+  box-shadow: 0 4px 20px rgba(13,27,42,0.3);
+}
+.cta-student:hover { box-shadow:0 6px 28px rgba(13,27,42,0.45); transform:translateY(-1px); }
+.cta-faculty {
+  background:linear-gradient(135deg,#2563eb 0%,#4f46e5 100%);
+  color:#fff;
+  box-shadow:0 4px 20px rgba(37,99,235,0.3);
+}
+.cta-faculty:hover { box-shadow:0 6px 28px rgba(37,99,235,0.45); transform:translateY(-1px); }
+
+.btn-arrow {
+  width:20px;height:20px;background:rgba(255,255,255,0.2);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:11px;
+  transition:transform 0.2s;
+}
+.cta-btn:hover .btn-arrow { transform:translateX(2px); }
+
+/* Trust footer */
+.card-trust {
+  display:flex;align-items:center;justify-content:center;gap:16px;
+  margin-top:16px;padding-top:16px;
+  border-top:1px solid var(--border);
+}
+.trust-item {
+  display:flex;align-items:center;gap:5px;
+  font-size:10.5px;color:var(--muted);
+}
+.trust-icon { font-size:12px; }
+
+/* ─── FEATURES BELT ─── */
+.features-belt {
+  position:relative;z-index:5;
+  display:flex;justify-content:center;gap:0;
+  padding:0 20px 20px;
+  flex-wrap:wrap;
+  animation: fadeUp 1s 0.5s var(--ease-out) both;
+}
+.feat-item {
+  display:flex;align-items:center;gap:10px;
+  padding:12px 24px;
+  border-right:1px solid rgba(255,255,255,0.07);
+}
+.feat-item:last-child { border-right:none; }
+.feat-icon {
+  width:32px;height:32px;border-radius:8px;
+  background:rgba(255,255,255,0.06);
+  display:flex;align-items:center;justify-content:center;font-size:15px;
+}
+.feat-title { font-size:12px;font-weight:600;color:rgba(255,255,255,0.7); }
+.feat-sub { font-size:10.5px;color:rgba(255,255,255,0.3);margin-top:1px; }
+
+/* ─── BOTTOM FOOTER ─── */
+.login-footer {
+  position:relative;z-index:5;
+  text-align:center;padding:16px 20px 28px;
+  font-size:11.5px;color:rgba(255,255,255,0.25);
+  border-top:1px solid rgba(255,255,255,0.05);
+}
+.login-footer a { color:rgba(255,255,255,0.4);text-decoration:none; }
+.login-footer a:hover { color:rgba(255,255,255,0.6); }
+
+/* ─── FLOATING ELEMENTS ─── */
+.float-el {
+  position:absolute;z-index:2;pointer-events:none;
+  animation:float 6s ease-in-out infinite;
+}
+.float-el:nth-child(2) { animation-delay:-2s; }
+.float-el:nth-child(3) { animation-delay:-4s; }
+@keyframes float {
+  0%,100%{ transform:translateY(0) rotate(0deg); }
+  33%{ transform:translateY(-8px) rotate(1deg); }
+  66%{ transform:translateY(5px) rotate(-1deg); }
+}
+.float-card {
+  background:rgba(255,255,255,0.06);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.1);border-radius:12px;
+  padding:12px 16px;font-size:12px;color:rgba(255,255,255,0.7);
+  white-space:nowrap;
+}
+.float-val { font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:600;color:var(--gold2); }
+.float-pos-1 { top:130px;left:40px; }
+.float-pos-2 { top:180px;right:40px; }
+.float-pos-3 { bottom:180px;left:30px; }
+
+/* ─── APP SHELL ─── */
+.app{display:none;min-height:100vh;}
+.app.on{display:flex;}
+
+/* SIDEBAR */
+.sb{width:var(--sb);background:var(--navy);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;overflow-y:auto;}
+.sb-top{padding:18px 17px 15px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px;}
+.sb-logo{width:34px;height:34px;background:var(--gold);border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;color:var(--navy);}
+.sb-nm{font-size:14px;font-weight:700;color:var(--white);}
+.sb-sub{font-size:9.5px;color:rgba(255,255,255,.33);letter-spacing:.9px;text-transform:uppercase;}
+.sb-user{padding:12px 17px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px;}
+.sb-av{width:34px;height:34px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--navy);flex-shrink:0;}
+.sb-un{font-size:13px;font-weight:600;color:var(--white);}
+.sb-ur{font-size:10px;color:rgba(255,255,255,.38);margin-top:1px;}
+.sb-nav{flex:1;padding:10px 0;}
+.sb-sec{padding:11px 17px 3px;font-size:9.5px;letter-spacing:1.6px;color:rgba(255,255,255,.28);font-weight:700;text-transform:uppercase;}
+.sb-i{display:flex;align-items:center;gap:10px;padding:10px 17px;cursor:pointer;transition:background .14s;font-size:13.5px;color:rgba(255,255,255,.62);border-left:3px solid transparent;}
+.sb-i:hover{background:rgba(255,255,255,.06);color:var(--white);}
+.sb-i.act{background:rgba(201,168,76,.15);color:var(--gold2);border-left-color:var(--gold);}
+.sb-ico{font-size:17px;width:21px;text-align:center;}
+.sb-bot{padding:13px 17px;border-top:1px solid rgba(255,255,255,.08);}
+.sb-out{width:100%;padding:8px;background:rgba(220,38,38,.13);color:#fca5a5;border:1px solid rgba(220,38,38,.2);border-radius:7px;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:background .18s;}
+.sb-out:hover{background:rgba(220,38,38,.22);}
+
+/* MAIN */
+.main{margin-left:var(--sb);flex:1;display:flex;flex-direction:column;}
+.topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 26px;height:60px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:50;}
+.tb-title{font-size:17px;font-weight:700;flex:1;color:var(--navy);}
+.sem-tag{background:var(--navy);color:var(--gold2);font-size:11px;padding:4px 11px;border-radius:6px;font-weight:600;font-family:'JetBrains Mono',monospace;}
+.notif{width:36px;height:36px;border-radius:9px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;background:var(--white);position:relative;}
+.ndot{position:absolute;top:6px;right:6px;width:7px;height:7px;background:var(--err);border-radius:50%;border:1.5px solid var(--white);}
+
+/* CONTENT */
+.cnt{padding:24px 26px;flex:1;}
+.pg{display:none;animation:fi .2s ease;}
+.pg.act{display:block;}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;}
+.ph h2{font-size:21px;font-weight:700;color:var(--navy);}
+.ph p{font-size:13px;color:var(--muted);margin-top:3px;}
+.card{background:var(--white);border-radius:var(--r);border:1px solid var(--border);padding:19px;}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px;}
+.ct{font-size:14px;font-weight:700;color:var(--navy);}
+.cl{font-size:12px;color:var(--info);cursor:pointer;font-weight:500;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:15px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;}
+.stat{background:var(--white);border-radius:var(--r);border:1px solid var(--border);padding:17px 19px;}
+.stat-dark{background:var(--navy);border-color:var(--navy);}
+.sv{font-size:27px;font-weight:700;color:var(--navy);font-family:'JetBrains Mono',monospace;margin:4px 0 3px;}
+.stat-dark .sv{color:var(--gold2);}
+.sl{font-size:11.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px;}
+.stat-dark .sl{color:rgba(255,255,255,.45);}
+.sc{font-size:11px;margin-top:3px;}
+.tw{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:13.5px;}
+th{background:var(--off);padding:10px 13px;text-align:left;font-size:10.5px;font-weight:700;color:var(--muted);letter-spacing:.7px;text-transform:uppercase;border-bottom:1px solid var(--border);}
+td{padding:12px 13px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:#fafbff;}
+.bx{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;}
+.bg{background:var(--ok-bg);color:#15803d;}
+.br{background:var(--err-bg);color:#b91c1c;}
+.bam{background:var(--warn-bg);color:#b45309;}
+.bb{background:var(--info-bg);color:#1d4ed8;}
+.bn{background:#e8edf5;color:var(--navy);}
+.bgd{background:#fdf3dc;color:#92660a;}
+.pb{height:6px;background:var(--off);border-radius:99px;overflow:hidden;border:1px solid var(--border);}
+.pf{height:100%;border-radius:99px;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 15px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .14s;font-family:'DM Sans',sans-serif;}
+.btn:active{transform:scale(.97);}
+.b-nv{background:var(--navy);color:var(--white);}
+.b-nv:hover{background:var(--navy2);}
+.b-ol{background:var(--white);border:1.5px solid var(--border);color:var(--text);}
+.b-ol:hover{border-color:var(--navy);color:var(--navy);}
+.b-sm{padding:5px 11px;font-size:12px;}
+.b-dn{background:var(--err-bg);color:var(--err);border:1px solid #fecaca;}
+.al{padding:11px 15px;border-radius:9px;font-size:13px;margin-bottom:14px;display:flex;align-items:flex-start;gap:9px;}
+.al-w{background:var(--warn-bg);color:#92400e;border:1px solid #fde68a;}
+.al-i{background:var(--info-bg);color:#1e40af;border:1px solid #bfdbfe;}
+.nc{padding:12px 15px;border-radius:9px;margin-bottom:9px;border-left:4px solid;}
+.nu{background:#fff5f5;border-color:var(--err);}
+.ni{background:#eff6ff;border-color:var(--info);}
+.ns{background:#f0fdf4;border-color:var(--ok);}
+.nt{font-size:13px;font-weight:700;}
+.nb{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.55;}
+.nd{font-size:11px;color:var(--muted);margin-top:5px;}
+.tabs{display:flex;gap:2px;background:var(--off);border-radius:9px;padding:3px;margin-bottom:18px;border:1px solid var(--border);}
+.tab{flex:1;text-align:center;padding:8px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;color:var(--muted);transition:all .14s;}
+.tab.act{background:var(--navy);color:var(--white);}
+.ar{padding:13px 0;border-bottom:1px solid var(--border);}
+.ar:last-child{border-bottom:none;}
+.am{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.as{font-size:13.5px;font-weight:600;}
+.ap{font-size:14px;font-weight:700;font-family:'JetBrains Mono',monospace;}
+.gr{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;font-family:'JetBrains Mono',monospace;flex-shrink:0;}
+.sr{display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid var(--border);}
+.sr:last-child{border-bottom:none;}
+.sav{width:33px;height:33px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--navy);background:#fdf3dc;flex-shrink:0;}
+.mi{width:62px;padding:6px 9px;border:1.5px solid var(--border);border-radius:7px;font-size:13px;font-family:'JetBrains Mono',monospace;text-align:center;outline:none;}
+.mi:focus{border-color:var(--navy);}
+.mb{margin-bottom:15px;}
+.mt{margin-top:15px;}
+.mono{font-family:'JetBrains Mono',monospace;}
+
+@media(max-width:900px){.g4{grid-template-columns:1fr 1fr;}.g3{grid-template-columns:1fr 1fr;}}
+@media(max-width:768px){
+  .login-nav { padding:16px 20px; }
+  .nav-badges { display:none; }
+  .float-el { display:none; }
+  .login-cards-wrap { flex-direction:column;align-items:center; }
+  .proof-strip { flex-wrap:wrap; }
+  .proof-item { min-width:120px; }
+  .features-belt { display:none; }
+}
+@media(max-width:640px){.g2,.g3,.g4{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- ═══ LOGIN SCREEN ═══ -->
+<div id="loginScreen" class="login-page">
+
+  <!-- Floating ambient elements -->
+  <div class="float-el float-pos-1">
+    <div class="float-card">
+      <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:2px;">TODAY'S ATTENDANCE</div>
+      <div class="float-val">94.2%</div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:1px;">↑ 2.1% vs yesterday</div>
+    </div>
+  </div>
+  <div class="float-el float-pos-2">
+    <div class="float-card">
+      <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:2px;">RESULTS PUBLISHED</div>
+      <div class="float-val">Mid-Term</div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:1px;">Sem 4 · CSE · 2024-25</div>
+    </div>
+  </div>
+  <div class="float-el float-pos-3">
+    <div class="float-card">
+      <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:2px;">NEXT CLASS</div>
+      <div class="float-val" style="font-size:15px;">DS Lab · 2:00 PM</div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:1px;">Room 304 · Prof. Ramaiah</div>
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <nav class="login-nav">
+    <div class="nav-brand">
+      <div class="nav-logo">V</div>
+      <div>
+        <div class="nav-title">VIMS</div>
+        <div class="nav-sub">Vignan University</div>
+      </div>
+    </div>
+    <div class="nav-badges">
+      <div class="nav-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        SSL Secured
+      </div>
+      <div class="nav-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        99.9% Uptime
+      </div>
+      <div class="nav-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        UGC Approved
+      </div>
+    </div>
+    <div class="nav-actions">
+      <button class="nav-link" onclick="showSignup()">Sign Up</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="login-hero">
+    <div class="hero-eyebrow">
+      <span class="eyebrow-dot"></span>
+      Academic Year 2024–25 · Semester IV Active
+    </div>
+    <h1 class="hero-h1">One Portal for<br><em>Everything Academic</em></h1>
+    <p class="hero-sub">Attendance, results, timetables, assignments — all in one place. Built for Vignan's 10,000+ students and 800+ faculty.</p>
+
+    <!-- Avatar proof -->
+    <div class="avatar-proof">
+      <div class="avatar-stack">
+        <div class="av-img">RK</div>
+        <div class="av-img av2">SD</div>
+        <div class="av-img av3">AP</div>
+        <div class="av-img av4">MR</div>
+        <div class="av-img av5">+</div>
+      </div>
+      <div class="av-text"><b>2,340+ students</b> logged in today</div>
+    </div>
+
+    <!-- Social proof strip -->
+    <div class="proof-strip">
+      <div class="proof-item">
+        <span class="proof-icon">🎓</span>
+        <div>
+          <div class="proof-num">10K+</div>
+          <div class="proof-lbl">Active Students</div>
+        </div>
+      </div>
+      <div class="proof-item">
+        <span class="proof-icon">👨‍🏫</span>
+        <div>
+          <div class="proof-num">800+</div>
+          <div class="proof-lbl">Faculty Members</div>
+        </div>
+      </div>
+      <div class="proof-item">
+        <span class="proof-icon">🏛️</span>
+        <div>
+          <div class="proof-num">50+</div>
+          <div class="proof-lbl">Departments</div>
+        </div>
+      </div>
+      <div class="proof-item">
+        <span class="proof-icon">📊</span>
+        <div>
+          <div class="proof-num">99.9%</div>
+          <div class="proof-lbl">Uptime SLA</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dual Login Cards -->
+  <section class="login-cards-wrap">
+
+    <!-- STUDENT CARD -->
+    <div class="login-card card-featured">
+      <div class="card-popular-badge">Most Used</div>
+      <div class="card-header">
+        <div class="card-icon student-icon">🎓</div>
+        <div>
+          <div class="card-type">Student Login</div>
+          <div class="card-tagline">Access grades, attendance & schedule</div>
+        </div>
+      </div>
+
+      <div class="card-benefits">
+        <div class="benefit-pill">
+          <svg viewBox="0 0 12 12" fill="none" stroke="#16a34a" stroke-width="2"><polyline points="2,6 5,9 10,3"/></svg>
+          Live Attendance
+        </div>
+        <div class="benefit-pill">
+          <svg viewBox="0 0 12 12" fill="none" stroke="#16a34a" stroke-width="2"><polyline points="2,6 5,9 10,3"/></svg>
+          Instant Results
+        </div>
+        <div class="benefit-pill">
+          <svg viewBox="0 0 12 12" fill="none" stroke="#16a34a" stroke-width="2"><polyline points="2,6 5,9 10,3"/></svg>
+          Timetable
+        </div>
+      </div>
+
+      <div class="demo-hint">
+        <span class="demo-hint-icon">💡</span>
+        <div class="demo-hint-text">
+          Demo credentials — Try any roll number from <b>21VV1A0501</b> to <b>21VV1A0515</b> · Password: <b>student@123</b>
+        </div>
+      </div>
+
+      <div class="lf-group">
+        <label class="lf-label">Roll Number</label>
+        <input class="lf-input" id="s-roll" placeholder="e.g. 21VV1A0501" value="21VV1A0501" autocomplete="username">
+      </div>
+      <div class="lf-group">
+        <div class="lf-row">
+          <label class="lf-label">Password</label>
+          <span class="lf-forgot">Forgot password?</span>
+        </div>
+        <input class="lf-input" id="s-pass" type="password" value="student@123" autocomplete="current-password">
+      </div>
+
+      <div class="lf-err" id="s-err">❌ Incorrect credentials. Please use the demo details above.</div>
+
+      <button class="cta-btn cta-student" onclick="doLogin('student')">
+        Sign In as Student
+        <span class="btn-arrow">→</span>
+      </button>
+
+      <div class="card-trust">
+        <div class="trust-item"><span class="trust-icon">🔒</span> Encrypted</div>
+        <div class="trust-item"><span class="trust-icon">✅</span> NAAC Certified</div>
+        <div class="trust-item"><span class="trust-icon">📱</span> Mobile Ready</div>
+      </div>
+    </div>
+
+    <!-- FACULTY CARD -->
+    <div class="login-card card-faculty">
+      <div class="card-header">
+        <div class="card-icon faculty-icon">👨‍🏫</div>
+        <div>
+          <div class="card-type">Faculty Login</div>
+          <div class="card-tagline">Manage attendance, marks & reports</div>
+        </div>
+      </div>
+
+      <div class="card-benefits">
+        <div class="benefit-pill">
+          <svg viewBox="0 0 12 12" fill="none" stroke="#16a34a" stroke-width="2"><polyline points="2,6 5,9 10,3"/></svg>
+          Mark Attendance
+        </div>
+        <div class="benefit-pill">
+          <svg viewBox="0 0 12 12" fill="none" stroke="#16a34a" stroke-width="2"><polyline points="2,6 5,9 10,3"/></svg>
+          Enter Marks
+        </div>
+        <div class="benefit-pill">
+          <svg viewBox="0 0 12 12" fill="none" stroke="#16a34a" stroke-width="2"><polyline points="2,6 5,9 10,3"/></svg>
+          Analytics
+        </div>
+      </div>
+
+      <div class="demo-hint blue-hint">
+        <span class="demo-hint-icon">💡</span>
+        <div class="demo-hint-text">
+          Demo credentials — Try any Employee ID from <b>VU-F-1042</b> to <b>VU-F-1046</b> · Password: <b>faculty@123</b>
+        </div>
+      </div>
+
+      <div class="lf-group">
+        <label class="lf-label">Employee ID</label>
+        <input class="lf-input faculty-focus" id="f-id" placeholder="e.g. VU-F-1042" value="VU-F-1042" autocomplete="username">
+      </div>
+      <div class="lf-group">
+        <div class="lf-row">
+          <label class="lf-label">Password</label>
+          <span class="lf-forgot">Forgot password?</span>
+        </div>
+        <input class="lf-input faculty-focus" id="f-pass" type="password" value="faculty@123" autocomplete="current-password">
+      </div>
+
+      <div class="lf-err" id="f-err">❌ Incorrect credentials. Please use the demo details above.</div>
+
+      <button class="cta-btn cta-faculty" onclick="doLogin('faculty')">
+        Sign In as Faculty
+        <span class="btn-arrow">→</span>
+      </button>
+
+      <div class="card-trust">
+        <div class="trust-item"><span class="trust-icon">🔒</span> Encrypted</div>
+        <div class="trust-item"><span class="trust-icon">📊</span> Real-time Data</div>
+        <div class="trust-item"><span class="trust-icon">🛡️</span> Role-Based Access</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature belt -->
+  <div class="features-belt">
+    <div class="feat-item">
+      <div class="feat-icon">📋</div>
+      <div>
+        <div class="feat-title">Attendance Tracking</div>
+        <div class="feat-sub">Real-time + historical</div>
+      </div>
+    </div>
+    <div class="feat-item">
+      <div class="feat-icon">📝</div>
+      <div>
+        <div class="feat-title">Exam Results</div>
+        <div class="feat-sub">Mid-term & Semester</div>
+      </div>
+    </div>
+    <div class="feat-item">
+      <div class="feat-icon">🗓️</div>
+      <div>
+        <div class="feat-title">Timetable</div>
+        <div class="feat-sub">Class & exam schedule</div>
+      </div>
+    </div>
+    <div class="feat-item">
+      <div class="feat-icon">📢</div>
+      <div>
+        <div class="feat-title">Notices</div>
+        <div class="feat-sub">Announcements & circulars</div>
+      </div>
+    </div>
+    <div class="feat-item">
+      <div class="feat-icon">📊</div>
+      <div>
+        <div class="feat-title">Analytics</div>
+        <div class="feat-sub">Performance reports</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="login-footer">
+    Vignan's Foundation for Science, Technology &amp; Research · Vadlamudi, Guntur, AP 522213 &nbsp;·&nbsp;
+    <a href="#">Help</a> &nbsp;·&nbsp; <a href="#">Privacy</a> &nbsp;·&nbsp; <a href="#">Contact IT</a>
+  </footer>
+</div>
+
+<!-- ═══ SIGN UP SCREEN ═══ -->
+<div id="signupScreen" class="login-page" style="display:none;">
+  <nav class="login-nav">
+    <div class="nav-brand">
+      <div class="nav-logo">V</div>
+      <div>
+        <div class="nav-title">VIMS</div>
+        <div class="nav-sub">Create account</div>
+      </div>
+    </div>
+    <div class="nav-actions">
+      <button class="nav-link" onclick="showLogin()">Back to Sign In</button>
+    </div>
+  </nav>
+  <section class="login-hero">
+    <div class="hero-eyebrow">
+      <span class="eyebrow-dot"></span>
+      Secure registration for Vignan users
+    </div>
+    <h1 class="hero-h1">Get started with<br><em>VIMS account</em></h1>
+    <p class="hero-sub">Create your student or faculty profile to access attendance, results, schedules and notices.</p>
+  </section>
+  <section class="login-cards-wrap">
+    <div class="login-card card-featured">
+      <div class="card-header">
+        <div class="card-icon student-icon">✍️</div>
+        <div>
+          <div class="card-type">Sign Up</div>
+          <div class="card-tagline">Create an account and join the portal</div>
+        </div>
+      </div>
+      <div class="demo-hint">
+        <span class="demo-hint-icon">📝</span>
+        <div class="demo-hint-text">
+          Use this form to create a new demo account. The page is a static prototype, so credentials will not persist after refresh.
+        </div>
+      </div>
+      <div class="lf-group">
+        <label class="lf-label">Account Type</label>
+        <select class="lf-input" id="su-role">
+          <option value="student">Student</option>
+          <option value="faculty">Faculty</option>
+        </select>
+      </div>
+      <div class="lf-group">
+        <label class="lf-label">Full Name</label>
+        <input class="lf-input" id="su-name" placeholder="e.g. Ravi Kumar" autocomplete="name">
+      </div>
+      <div class="lf-group">
+        <label class="lf-label">Email</label>
+        <input class="lf-input" id="su-email" type="email" placeholder="you@example.com" autocomplete="email">
+      </div>
+      <div class="lf-group">
+        <label class="lf-label">Roll / Employee ID</label>
+        <input class="lf-input" id="su-id" placeholder="e.g. 21VV1A0501 or VU-F-1042" autocomplete="username">
+      </div>
+      <div class="lf-group">
+        <label class="lf-label">Password</label>
+        <input class="lf-input" id="su-pass" type="password" placeholder="Enter password" autocomplete="new-password">
+      </div>
+      <div class="lf-group">
+        <label class="lf-label">Confirm Password</label>
+        <input class="lf-input" id="su-confirm" type="password" placeholder="Confirm password" autocomplete="new-password">
+      </div>
+      <div class="lf-err" id="su-err"></div>
+      <button class="cta-btn cta-student" onclick="doSignup()">
+        Create Account
+        <span class="btn-arrow">→</span>
+      </button>
+      <div class="card-trust">
+        <div class="trust-item"><span class="trust-icon">🔒</span> Secure entry</div>
+        <div class="trust-item"><span class="trust-icon">✅</span> Demo workflow</div>
+        <div class="trust-item"><span class="trust-icon">📱</span> Mobile ready</div>
+      </div>
+    </div>
+  </section>
+  <footer class="login-footer">
+    Vignan's Foundation for Science, Technology &amp; Research · Vadlamudi, Guntur, AP 522213 &nbsp;·&nbsp;
+    <a href="#" onclick="showLogin();return false;">Already have an account? Sign In</a>
+  </footer>
+</div>
+
+<!-- ═══ STUDENT APP ═══ -->
+<div class="app" id="stuApp">
+  <aside class="sb">
+    <div class="sb-top"><div class="sb-logo">V</div><div><div class="sb-nm">VIMS</div><div class="sb-sub">Student Portal</div></div></div>
+    <div class="sb-user"><div class="sb-av">RK</div><div><div class="sb-un">Ravi Kumar</div><div class="sb-ur">21VV1A0501 · CSE-A</div></div></div>
+    <nav class="sb-nav">
+      <div class="sb-sec">Main</div>
+      <div class="sb-i act" onclick="sNav(this,'sd')"><span class="sb-ico">🏠</span>Dashboard</div>
+      <div class="sb-i" onclick="sNav(this,'sa')"><span class="sb-ico">📋</span>My Attendance</div>
+      <div class="sb-i" onclick="sNav(this,'sr')"><span class="sb-ico">🏆</span>Exam & Results</div>
+      <div class="sb-sec">Info</div>
+      <div class="sb-i" onclick="sNav(this,'st')"><span class="sb-ico">🗓️</span>Timetable</div>
+      <div class="sb-i" onclick="sNav(this,'sn')"><span class="sb-ico">📢</span>Notices</div>
+      <div class="sb-i" onclick="sNav(this,'ss')"><span class="sb-ico">📚</span>Syllabus</div>
+      <div class="sb-i" onclick="sNav(this,'sf')"><span class="sb-ico">💰</span>Fee Status</div>
+    </nav>
+    <div class="sb-bot"><button class="sb-out" onclick="logout()">⬅ Sign Out</button></div>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <div class="tb-title" id="s-title">Dashboard</div>
+      <div class="sem-tag">SEM IV · 2024-25</div>
+      <div class="notif">🔔<span class="ndot"></span></div>
+    </div>
+    <div class="cnt">
+
+      <!-- Student Dashboard -->
+      <div class="pg act" id="s-pg-sd">
+        <div class="ph"><div><h2>Welcome back, Ravi 👋</h2><p>Here's your academic snapshot for today</p></div></div>
+        <div class="g4 mb">
+          <div class="stat stat-dark"><div class="sl">Attendance</div><div class="sv">87.5%</div><div class="sc" style="color:var(--gold2)">⚠ Min 75% required</div></div>
+          <div class="stat"><div class="sl">CGPA</div><div class="sv">8.4</div><div class="sc" style="color:var(--ok)">↑ 0.2 from last sem</div></div>
+          <div class="stat"><div class="sl">Subjects</div><div class="sv">6</div><div class="sc" style="color:var(--muted)">This semester</div></div>
+          <div class="stat"><div class="sl">Backlogs</div><div class="sv">0</div><div class="sc" style="color:var(--ok)">Clean record ✓</div></div>
+        </div>
+        <div class="g2 mb">
+          <div class="card">
+            <div class="ch"><span class="ct">Attendance Snapshot</span><span class="cl" onclick="sNav(document.querySelector('#stuApp .sb-i:nth-child(3)'),'sa')">Full report →</span></div>
+            <div class="ar"><div class="am"><span class="as">Data Structures</span><span class="ap" style="color:var(--ok)">92%</span></div><div class="pb"><div class="pf" style="width:92%;background:var(--ok)"></div></div></div>
+            <div class="ar"><div class="am"><span class="as">Computer Networks</span><span class="ap" style="color:var(--ok)">88%</span></div><div class="pb"><div class="pf" style="width:88%;background:var(--ok)"></div></div></div>
+            <div class="ar"><div class="am"><span class="as">DBMS</span><span class="ap" style="color:var(--warn)">76%</span></div><div class="pb"><div class="pf" style="width:76%;background:var(--warn)"></div></div></div>
+            <div class="ar"><div class="am"><span class="as">OS Lab</span><span class="ap" style="color:var(--err)">72%</span></div><div class="pb"><div class="pf" style="width:72%;background:var(--err)"></div></div></div>
+          </div>
+          <div class="card">
+            <div class="ch"><span class="ct">Mid-term Marks</span><span class="cl" onclick="sNav(document.querySelector('#stuApp .sb-i:nth-child(4)'),'sr')">Full results →</span></div>
+            <div class="ar"><div class="am"><span class="as">Data Structures</span><span class="ap">28 / 30</span></div><div class="pb"><div class="pf" style="width:93%;background:var(--info)"></div></div></div>
+            <div class="ar"><div class="am"><span class="as">Computer Networks</span><span class="ap">25 / 30</span></div><div class="pb"><div class="pf" style="width:83%;background:var(--info)"></div></div></div>
+            <div class="ar"><div class="am"><span class="as">DBMS</span><span class="ap">22 / 30</span></div><div class="pb"><div class="pf" style="width:73%;background:var(--warn)"></div></div></div>
+            <div class="ar"><div class="am"><span class="as">OS Lab</span><span class="ap">19 / 30</span></div><div class="pb"><div class="pf" style="width:63%;background:var(--err)"></div></div></div>
+          </div>
+        </div>
+        <div class="card mb">
+          <div class="ch"><span class="ct">Notices & Announcements</span></div>
+          <div class="nc nu"><div class="nt">⚠ Attendance Warning</div><div class="nb">OS Lab attendance is below 75%. Attend all remaining classes to avoid detainment.</div><div class="nd">Posted: 12 Jan 2025</div></div>
+          <div class="nc ni"><div class="nt">ℹ Mid-Sem Exam Schedule</div><div class="nb">Mid-semester examinations will be held from 20–25 Jan 2025. Hall tickets available from 18 Jan.</div><div class="nd">Posted: 10 Jan 2025</div></div>
+          <div class="nc ns"><div class="nt">✅ Fee Receipt Generated</div><div class="nb">Semester IV tuition fee payment confirmed. Receipt available for download.</div><div class="nd">Posted: 8 Jan 2025</div></div>
+        </div>
+      </div>
+
+      <!-- Attendance -->
+      <div class="pg" id="s-pg-sa">
+        <div class="ph"><div><h2>My Attendance</h2><p>Semester IV — Jan 2025</p></div></div>
+        <div class="al al-w mb">⚠ Minimum 75% attendance is mandatory to be eligible for end-semester exams.</div>
+        <div class="card">
+          <table><thead><tr><th>Subject</th><th>Classes Held</th><th>Attended</th><th>%</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><b>Data Structures</b></td><td class="mono">48</td><td class="mono">44</td><td class="mono" style="color:var(--ok)">91.7%</td><td><span class="bx bg">Safe</span></td></tr>
+            <tr><td><b>Computer Networks</b></td><td class="mono">42</td><td class="mono">37</td><td class="mono" style="color:var(--ok)">88.1%</td><td><span class="bx bg">Safe</span></td></tr>
+            <tr><td><b>DBMS</b></td><td class="mono">45</td><td class="mono">35</td><td class="mono" style="color:var(--warn)">77.8%</td><td><span class="bx bam">Caution</span></td></tr>
+            <tr><td><b>Operating Systems</b></td><td class="mono">40</td><td class="mono">29</td><td class="mono" style="color:var(--err)">72.5%</td><td><span class="bx br">At Risk</span></td></tr>
+            <tr><td><b>OS Lab</b></td><td class="mono">28</td><td class="mono">20</td><td class="mono" style="color:var(--err)">71.4%</td><td><span class="bx br">At Risk</span></td></tr>
+            <tr><td><b>DS Lab</b></td><td class="mono">24</td><td class="mono">23</td><td class="mono" style="color:var(--ok)">95.8%</td><td><span class="bx bg">Safe</span></td></tr>
+          </tbody></table>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div class="pg" id="s-pg-sr">
+        <div class="ph"><div><h2>Exam & Results</h2><p>Academic performance — all semesters</p></div></div>
+        <div class="tabs" id="rtabs">
+          <div class="tab act" onclick="rTab(this,'rp-s4')">Sem IV (Current)</div>
+          <div class="tab" onclick="rTab(this,'rp-s3')">Sem III</div>
+          <div class="tab" onclick="rTab(this,'rp-s2')">Sem II</div>
+          <div class="tab" onclick="rTab(this,'rp-s1')">Sem I</div>
+        </div>
+        <div id="rp-s4">
+          <div class="g4 mb">
+            <div class="stat"><div class="sl">GPA (Sem IV)</div><div class="sv">8.6</div></div>
+            <div class="stat"><div class="sl">CGPA</div><div class="sv">8.4</div></div>
+            <div class="stat"><div class="sl">Credits Earned</div><div class="sv">22</div></div>
+            <div class="stat"><div class="sl">Backlogs</div><div class="sv" style="color:var(--ok)">0</div></div>
+          </div>
+          <div class="card">
+            <div class="ch"><span class="ct">Mid-Semester Results — Sem IV</span><span class="bx bb">Mid-Term</span></div>
+            <table><thead><tr><th>Subject</th><th>Code</th><th>Max</th><th>Marks</th><th>Grade</th></tr></thead>
+            <tbody>
+              <tr><td><b>Data Structures</b></td><td class="mono">CS401</td><td class="mono">30</td><td class="mono">28</td><td><span class="bx bg">O</span></td></tr>
+              <tr><td><b>Computer Networks</b></td><td class="mono">CS402</td><td class="mono">30</td><td class="mono">25</td><td><span class="bx bb">A+</span></td></tr>
+              <tr><td><b>DBMS</b></td><td class="mono">CS403</td><td class="mono">30</td><td class="mono">22</td><td><span class="bx bam">B+</span></td></tr>
+              <tr><td><b>Operating Systems</b></td><td class="mono">CS404</td><td class="mono">30</td><td class="mono">19</td><td><span class="bx bam">B</span></td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div id="rp-s3" style="display:none">
+          <div class="g4 mb">
+            <div class="stat"><div class="sl">GPA (Sem III)</div><div class="sv">8.2</div></div>
+            <div class="stat"><div class="sl">Credits Earned</div><div class="sv">24</div></div>
+            <div class="stat"><div class="sl">Backlogs</div><div class="sv" style="color:var(--ok)">0</div></div>
+            <div class="stat"><div class="sl">Rank</div><div class="sv">12</div></div>
+          </div>
+          <div class="card"><div class="ch"><span class="ct">Semester III Final Results</span><span class="bx bg">Passed</span></div>
+            <table><thead><tr><th>Subject</th><th>Code</th><th>Marks</th><th>Grade</th></tr></thead>
+            <tbody>
+              <tr><td><b>Discrete Math</b></td><td class="mono">CS301</td><td class="mono">76/100</td><td><span class="bx bg">A</span></td></tr>
+              <tr><td><b>Computer Org</b></td><td class="mono">CS302</td><td class="mono">82/100</td><td><span class="bx bb">A+</span></td></tr>
+              <tr><td><b>OOP with Java</b></td><td class="mono">CS303</td><td class="mono">88/100</td><td><span class="bx bg">O</span></td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div id="rp-s2" style="display:none"><div class="card"><div class="ch"><span class="ct">Semester II Results</span><span class="bx bg">Passed</span></div><p style="font-size:13px;color:var(--muted);padding:10px 0">All results passed. GPA: 8.0</p></div></div>
+        <div id="rp-s1" style="display:none"><div class="card"><div class="ch"><span class="ct">Semester I Results</span><span class="bx bg">Passed</span></div><p style="font-size:13px;color:var(--muted);padding:10px 0">All results passed. GPA: 7.8</p></div></div>
+      </div>
+
+      <!-- Timetable -->
+      <div class="pg" id="s-pg-st">
+        <div class="ph"><div><h2>Timetable</h2><p>Semester IV — Jan 2025</p></div></div>
+        <div class="card">
+          <table>
+            <thead><tr><th>Time</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th><th>Saturday</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">9:00 AM</td><td>Data Structures<br><small>Room 302</small></td><td>Computer Networks<br><small>Room 301</small></td><td>Data Structures<br><small>Room 302</small></td><td>DBMS<br><small>Room 303</small></td><td>Operating Systems<br><small>Room 304</small></td><td>DS Lab<br><small>Lab 1</small></td></tr>
+              <tr><td class="mono">10:00 AM</td><td>Data Structures<br><small>Room 302</small></td><td>Computer Networks<br><small>Room 301</small></td><td>Data Structures<br><small>Room 302</small></td><td>DBMS<br><small>Room 303</small></td><td>Operating Systems<br><small>Room 304</small></td><td>DS Lab<br><small>Lab 1</small></td></tr>
+              <tr><td class="mono">11:00 AM</td><td>Break</td><td>Break</td><td>Break</td><td>Break</td><td>Break</td><td>Break</td></tr>
+              <tr><td class="mono">11:15 AM</td><td>Computer Networks<br><small>Room 301</small></td><td>Data Structures<br><small>Room 302</small></td><td>Operating Systems<br><small>Room 304</small></td><td>Data Structures<br><small>Room 302</small></td><td>DBMS<br><small>Room 303</small></td><td>OS Lab<br><small>Lab 2</small></td></tr>
+              <tr><td class="mono">12:15 PM</td><td>Computer Networks<br><small>Room 301</small></td><td>Data Structures<br><small>Room 302</small></td><td>Operating Systems<br><small>Room 304</small></td><td>Data Structures<br><small>Room 302</small></td><td>DBMS<br><small>Room 303</small></td><td>OS Lab<br><small>Lab 2</small></td></tr>
+              <tr><td class="mono">1:15 PM</td><td>Lunch Break</td><td>Lunch Break</td><td>Lunch Break</td><td>Lunch Break</td><td>Lunch Break</td><td>Lunch Break</td></tr>
+              <tr><td class="mono">2:00 PM</td><td>DBMS<br><small>Room 303</small></td><td>Operating Systems<br><small>Room 304</small></td><td>Computer Networks<br><small>Room 301</small></td><td>Operating Systems<br><small>Room 304</small></td><td>Data Structures<br><small>Room 302</small></td><td>-</td></tr>
+              <tr><td class="mono">3:00 PM</td><td>DBMS<br><small>Room 303</small></td><td>Operating Systems<br><small>Room 304</small></td><td>Computer Networks<br><small>Room 301</small></td><td>Operating Systems<br><small>Room 304</small></td><td>Data Structures<br><small>Room 302</small></td><td>-</td></tr>
+              <tr><td class="mono">4:00 PM</td><td>Operating Systems<br><small>Room 304</small></td><td>DBMS<br><small>Room 303</small></td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Notices -->
+      <div class="pg" id="s-pg-sn">
+        <div class="ph"><div><h2>Notices</h2><p>Announcements and circulars</p></div></div>
+        <div class="card">
+          <div class="nc nu"><div class="nt">⚠ Attendance Warning</div><div class="nb">OS Lab attendance is below 75%. Attend all remaining classes to avoid detainment.</div><div class="nd">Posted: 12 Jan 2025</div></div>
+          <div class="nc ni"><div class="nt">ℹ Mid-Sem Exam Schedule</div><div class="nb">Mid-semester examinations will be held from 20–25 Jan 2025. Hall tickets available from 18 Jan.</div><div class="nd">Posted: 10 Jan 2025</div></div>
+          <div class="nc ns"><div class="nt">✅ Fee Receipt Generated</div><div class="nb">Semester IV tuition fee payment confirmed. Receipt available for download.</div><div class="nd">Posted: 8 Jan 2025</div></div>
+          <div class="nc ni"><div class="nt">📅 Holiday Notice</div><div class="nb">College will remain closed on 26 Jan 2025 (Republic Day). Classes resume on 27 Jan.</div><div class="nd">Posted: 5 Jan 2025</div></div>
+          <div class="nc ns"><div class="nt">🎓 Placement Drive</div><div class="nb">TCS placement drive scheduled for 15 Feb 2025. Register by 10 Feb.</div><div class="nd">Posted: 3 Jan 2025</div></div>
+        </div>
+      </div>
+
+      <!-- Syllabus -->
+      <div class="pg" id="s-pg-ss">
+        <div class="ph"><div><h2>Syllabus</h2><p>Course curriculum — Semester IV</p></div></div>
+        <div class="card mb">
+          <div class="ch"><span class="ct">Data Structures (CS401)</span><span class="bx bb">4 Credits</span></div>
+          <div style="padding:10px 0">
+            <div style="font-weight:600;margin-bottom:8px">Units:</div>
+            <ul style="padding-left:20px;font-size:13px;color:var(--muted);line-height:1.6">
+              <li>Unit 1: Introduction to Data Structures</li>
+              <li>Unit 2: Arrays and Linked Lists</li>
+              <li>Unit 3: Stacks and Queues</li>
+              <li>Unit 4: Trees and Graphs</li>
+              <li>Unit 5: Sorting and Searching</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card mb">
+          <div class="ch"><span class="ct">Computer Networks (CS402)</span><span class="bx bb">4 Credits</span></div>
+          <div style="padding:10px 0">
+            <div style="font-weight:600;margin-bottom:8px">Units:</div>
+            <ul style="padding-left:20px;font-size:13px;color:var(--muted);line-height:1.6">
+              <li>Unit 1: Network Fundamentals</li>
+              <li>Unit 2: Data Link Layer</li>
+              <li>Unit 3: Network Layer</li>
+              <li>Unit 4: Transport Layer</li>
+              <li>Unit 5: Application Layer</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card mb">
+          <div class="ch"><span class="ct">Database Management Systems (CS403)</span><span class="bx bb">4 Credits</span></div>
+          <div style="padding:10px 0">
+            <div style="font-weight:600;margin-bottom:8px">Units:</div>
+            <ul style="padding-left:20px;font-size:13px;color:var(--muted);line-height:1.6">
+              <li>Unit 1: Introduction to DBMS</li>
+              <li>Unit 2: Relational Model</li>
+              <li>Unit 3: SQL</li>
+              <li>Unit 4: Normalization</li>
+              <li>Unit 5: Transaction Management</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="ct">Operating Systems (CS404)</span><span class="bx bb">4 Credits</span></div>
+          <div style="padding:10px 0">
+            <div style="font-weight:600;margin-bottom:8px">Units:</div>
+            <ul style="padding-left:20px;font-size:13px;color:var(--muted);line-height:1.6">
+              <li>Unit 1: OS Overview</li>
+              <li>Unit 2: Process Management</li>
+              <li>Unit 3: Memory Management</li>
+              <li>Unit 4: File Systems</li>
+              <li>Unit 5: I/O and Storage</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fee Status -->
+      <div class="pg" id="s-pg-sf">
+        <div class="ph"><div><h2>Fee Status</h2><p>Payment details and outstanding dues</p></div></div>
+        <div class="g2 mb">
+          <div class="stat stat-dark"><div class="sl">Total Paid</div><div class="sv">₹45,000</div><div class="sc" style="color:var(--gold2)">Semester IV</div></div>
+          <div class="stat"><div class="sl">Outstanding</div><div class="sv">₹0</div><div class="sc" style="color:var(--ok)">All Clear ✓</div></div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="ct">Fee Structure — Semester IV</span></div>
+          <div class="ar"><div class="am"><span class="as">Tuition Fee</span><span class="ap mono">₹35,000</span></div></div>
+          <div class="ar"><div class="am"><span class="as">Lab Fee</span><span class="ap mono">₹5,000</span></div></div>
+          <div class="ar"><div class="am"><span class="as">Library Fee</span><span class="ap mono">₹2,000</span></div></div>
+          <div class="ar"><div class="am"><span class="as">Exam Fee</span><span class="ap mono">₹3,000</span></div></div>
+          <div class="ar" style="border-bottom:2px solid var(--border);padding-bottom:12px"><div class="am"><span class="as">Miscellaneous</span><span class="ap mono">₹5,000</span></div></div>
+          <div class="ar"><div class="am"><span class="as" style="font-weight:700">Total</span><span class="ap mono" style="font-weight:700">₹50,000</span></div></div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="ct">Payment History</span></div>
+          <div class="ar"><div class="am"><span class="as">Semester IV Tuition</span><span class="ap mono" style="color:var(--ok)">₹35,000</span></div><div style="font-size:12px;color:var(--muted)">Paid on 5 Jan 2025</div></div>
+          <div class="ar"><div class="am"><span class="as">Lab & Other Fees</span><span class="ap mono" style="color:var(--ok)">₹10,000</span></div><div style="font-size:12px;color:var(--muted)">Paid on 5 Jan 2025</div></div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- ═══ FACULTY APP ═══ -->
+<div class="app" id="facApp">
+  <aside class="sb">
+    <div class="sb-top"><div class="sb-logo">V</div><div><div class="sb-nm">VIMS</div><div class="sb-sub">Faculty Portal</div></div></div>
+    <div class="sb-user"><div class="sb-av">PR</div><div><div class="sb-un">Prof. P. Ramaiah</div><div class="sb-ur">VU-F-1042 · CSE Dept</div></div></div>
+    <nav class="sb-nav">
+      <div class="sb-sec">Main</div>
+      <div class="sb-i act" onclick="fNav(this,'fd')"><span class="sb-ico">🏠</span>Dashboard</div>
+      <div class="sb-i" onclick="fNav(this,'fa')"><span class="sb-ico">📋</span>Mark Attendance</div>
+      <div class="sb-i" onclick="fNav(this,'fm')"><span class="sb-ico">📝</span>Enter Marks</div>
+      <div class="sb-i" onclick="fNav(this,'fr')"><span class="sb-ico">📊</span>Reports</div>
+      <div class="sb-sec">Tools</div>
+      <div class="sb-i" onclick="fNav(this,'fc')"><span class="sb-ico">📚</span>Course Material</div>
+      <div class="sb-i" onclick="fNav(this,'fn')"><span class="sb-ico">📢</span>Post Notice</div>
+    </nav>
+    <div class="sb-bot"><button class="sb-out" onclick="logout()">⬅ Sign Out</button></div>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <div class="tb-title" id="f-title">Faculty Dashboard</div>
+      <div class="sem-tag">SEM IV · 2024-25</div>
+      <div class="notif">🔔<span class="ndot"></span></div>
+    </div>
+    <div class="cnt">
+
+      <!-- Faculty Dashboard -->
+      <div class="pg act" id="f-pg-fd">
+        <div class="ph"><div><h2>Good morning, Prof. Ramaiah 👋</h2><p>Here's your class overview for today</p></div></div>
+        <div class="g4 mb">
+          <div class="stat stat-dark"><div class="sl">Today's Classes</div><div class="sv">3</div><div class="sc" style="color:var(--gold2)">Next: 2:00 PM</div></div>
+          <div class="stat"><div class="sl">Students (DS)</div><div class="sv">60</div><div class="sc" style="color:var(--muted)">Sec A + B</div></div>
+          <div class="stat"><div class="sl">Avg Attendance</div><div class="sv">84%</div><div class="sc" style="color:var(--ok)">↑ 2% this week</div></div>
+          <div class="stat"><div class="sl">Pending Tasks</div><div class="sv">2</div><div class="sc" style="color:var(--warn)">Marks entry due</div></div>
+        </div>
+        <div class="g2 mb">
+          <div class="card">
+            <div class="ch"><span class="ct">Class Schedule — Today</span></div>
+            <div class="ar"><div class="am"><span class="as">Data Structures · CSE-A</span><span class="bx bg">Done</span></div><div style="font-size:12px;color:var(--muted)">9:00 AM · Room 302</div></div>
+            <div class="ar"><div class="am"><span class="as">DS Lab · CSE-B</span><span class="bx bb">Upcoming</span></div><div style="font-size:12px;color:var(--muted)">2:00 PM · Lab 1</div><div style="margin-top:6px"><button class="btn b-nv b-sm" onclick="fNav(document.querySelector('#facApp .sb-i:nth-child(3)'),'fa')">Mark Att.</button></div></div>
+            <div class="ar"><div class="am"><span class="as">Algorithm Design</span><span class="bx bam">Later</span></div><div style="font-size:12px;color:var(--muted)">4:00 PM · Room 301</div></div>
+          </div>
+          <div class="card">
+            <div class="ch"><span class="ct">Pending Actions</span></div>
+            <div class="nc nu"><div class="nt">📝 Marks Entry Due</div><div class="nb">Mid-term marks for CS401 Section A not submitted. Deadline: 15 Jan.</div><div style="margin-top:8px"><button class="btn b-nv b-sm" onclick="fNav(document.querySelector('#facApp .sb-i:nth-child(4)'),'fm')">Enter Now</button></div></div>
+            <div class="nc ni"><div class="nt">📋 Attendance Report</div><div class="nb">Monthly attendance report for January to be submitted by 31 Jan 2025.</div></div>
+          </div>
+        </div>
+        <div class="card mb">
+          <div class="ch"><span class="ct">Low Attendance Alert</span><span class="bx br">3 Students</span></div>
+          <div class="sr"><div class="sav">AK</div><div style="flex:1"><div style="font-size:13px;font-weight:600">Ajay Kumar · 21VV1A0508</div><div style="font-size:11px;color:var(--err)">29 / 48 classes</div></div><span class="mono" style="font-weight:700;color:var(--err)">60%</span></div>
+          <div class="sr"><div class="sav">PS</div><div style="flex:1"><div style="font-size:13px;font-weight:600">Priya Sharma · 21VV1A0524</div><div style="font-size:11px;color:var(--err)">31 / 48</div></div><span class="mono" style="font-weight:700;color:var(--err)">65%</span></div>
+          <div class="sr"><div class="sav">MK</div><div style="flex:1"><div style="font-size:13px;font-weight:600">Manoj Kumar · 21VV1A0512</div><div style="font-size:11px;color:var(--err)">30 / 48</div></div><span class="mono" style="font-weight:700;color:var(--err)">62%</span></div>
+        </div>
+      </div>
+
+      <!-- Mark Attendance -->
+      <div class="pg" id="f-pg-fa">
+        <div class="ph">
+          <div><h2>Mark Attendance</h2><p>Data Structures (CS401) · Section A · <span class="mono">13 Jan 2025</span></p></div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span id="att-p" class="bx bg">15 Present</span>
+            <span id="att-a" class="bx br">0 Absent</span>
+          </div>
+        </div>
+        <div class="card mb">
+          <div class="ch">
+            <span class="ct">Student List</span>
+            <div style="display:flex;gap:8px">
+              <button class="btn b-ol b-sm" onclick="markAll(true)">All Present</button>
+              <button class="btn b-ol b-sm" onclick="markAll(false)">All Absent</button>
+            </div>
+          </div>
+          <div class="tw"><table>
+            <thead><tr><th>#</th><th>Roll No</th><th>Name</th><th>Present</th><th>Absent</th><th>Status</th></tr></thead>
+            <tbody id="att-tb"></tbody>
+          </table></div>
+          <div style="margin-top:14px;text-align:right"><button class="btn b-nv" onclick="saveAtt()">💾 Save Attendance</button></div>
+        </div>
+      </div>
+
+      <!-- Enter Marks -->
+      <div class="pg" id="f-pg-fm">
+        <div class="ph"><div><h2>Enter Marks</h2><p>Mid-Semester Exam · CS401 — Data Structures · Max: 30</p></div></div>
+        <div class="card mb">
+          <div class="ch"><span class="ct">Mark Entry</span><button class="btn b-nv b-sm" onclick="saveMarks()">💾 Save All Marks</button></div>
+          <div class="tw"><table>
+            <thead><tr><th>#</th><th>Roll No</th><th>Name</th><th>Marks (0–30)</th><th>Grade</th></tr></thead>
+            <tbody id="marks-tb"></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <!-- Reports -->
+      <div class="pg" id="f-pg-fr">
+        <div class="ph"><div><h2>Reports</h2><p>Analytics and class performance</p></div></div>
+        <div class="g3 mb">
+          <div class="stat"><div class="sl">Class Avg Marks</div><div class="sv">23.4</div><div class="sc" style="color:var(--ok)">↑ Better than dept avg</div></div>
+          <div class="stat"><div class="sl">Pass Rate</div><div class="sv">93%</div><div class="sc" style="color:var(--ok)">14 of 15 students</div></div>
+          <div class="stat"><div class="sl">Avg Attendance</div><div class="sv">84%</div><div class="sc" style="color:var(--muted)">Section A</div></div>
+        </div>
+        <div class="card mb">
+          <div class="ch"><span class="ct">Students with Low Attendance (below 75%)</span><span class="bx br">3 at risk</span></div>
+          <div class="sr"><div class="sav">AK</div><div style="flex:1"><div style="font-size:13px;font-weight:600">Ajay Kumar · 21VV1A0508</div><div style="font-size:11px;color:var(--err)">29 / 48</div></div><span class="mono" style="font-weight:700;color:var(--err)">60%</span></div>
+          <div class="sr"><div class="sav">PS</div><div style="flex:1"><div style="font-size:13px;font-weight:600">Priya Sharma · 21VV1A0524</div><div style="font-size:11px;color:var(--err)">31 / 48</div></div><span class="mono" style="font-weight:700;color:var(--err)">65%</span></div>
+          <div class="sr"><div class="sav">MK</div><div style="flex:1"><div style="font-size:13px;font-weight:600">Manoj Kumar · 21VV1A0512</div><div style="font-size:11px;color:var(--err)">30 / 48</div></div><span class="mono" style="font-weight:700;color:var(--err)">62%</span></div>
+        </div>
+      </div>
+
+      <!-- Course Material -->
+      <div class="pg" id="f-pg-fc">
+        <div class="ph"><div><h2>Course Material</h2><p>Upload and manage study materials</p></div></div>
+        <div class="card mb">
+          <div class="ch"><span class="ct">Upload New Material</span></div>
+          <div style="padding:15px 0">
+            <div class="lf-group">
+              <label class="lf-label">Subject</label>
+              <select class="lf-input" id="mat-subject">
+                <option>Data Structures</option>
+                <option>Computer Networks</option>
+                <option>DBMS</option>
+                <option>Operating Systems</option>
+              </select>
+            </div>
+            <div class="lf-group">
+              <label class="lf-label">Title</label>
+              <input class="lf-input" id="mat-title" placeholder="e.g. Unit 1 Notes">
+            </div>
+            <div class="lf-group">
+              <label class="lf-label">Description</label>
+              <textarea class="lf-input" id="mat-desc" placeholder="Brief description..." style="min-height:60px;resize:vertical"></textarea>
+            </div>
+            <div class="lf-group">
+              <label class="lf-label">File Upload</label>
+              <input type="file" id="mat-file" style="padding:8px;border:1.5px solid var(--border);border-radius:8px;width:100%">
+            </div>
+            <button class="btn b-nv" onclick="uploadMaterial()" style="margin-top:10px">📤 Upload Material</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="ct">Uploaded Materials</span></div>
+          <div class="ar"><div class="am"><span class="as">Data Structures - Unit 1 Notes</span><span class="bx bg">PDF</span></div><div style="font-size:12px;color:var(--muted)">Uploaded: 10 Jan 2025</div></div>
+          <div class="ar"><div class="am"><span class="as">Computer Networks - Lab Manual</span><span class="bx bb">DOC</span></div><div style="font-size:12px;color:var(--muted)">Uploaded: 8 Jan 2025</div></div>
+          <div class="ar"><div class="am"><span class="as">DBMS - Sample Queries</span><span class="bx bam">SQL</span></div><div style="font-size:12px;color:var(--muted)">Uploaded: 5 Jan 2025</div></div>
+        </div>
+      </div>
+
+      <!-- Post Notice -->
+      <div class="pg" id="f-pg-fn">
+        <div class="ph"><div><h2>Post Notice</h2><p>Create and publish announcements</p></div></div>
+        <div class="card mb">
+          <div class="ch"><span class="ct">New Notice</span></div>
+          <div style="padding:15px 0">
+            <div class="lf-group">
+              <label class="lf-label">Priority</label>
+              <select class="lf-input" id="notice-priority">
+                <option value="normal">Normal</option>
+                <option value="important">Important</option>
+                <option value="urgent">Urgent</option>
+              </select>
+            </div>
+            <div class="lf-group">
+              <label class="lf-label">Title</label>
+              <input class="lf-input" id="notice-title" placeholder="Notice title">
+            </div>
+            <div class="lf-group">
+              <label class="lf-label">Message</label>
+              <textarea class="lf-input" id="notice-msg" placeholder="Notice content..." style="min-height:80px;resize:vertical"></textarea>
+            </div>
+            <div class="lf-group">
+              <label class="lf-label">Target Audience</label>
+              <select class="lf-input" id="notice-audience">
+                <option>All Students</option>
+                <option>CSE Department</option>
+                <option>Semester IV</option>
+                <option>Specific Class</option>
+              </select>
+            </div>
+            <button class="btn b-nv" onclick="postNotice()" style="margin-top:10px">📢 Post Notice</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="ct">Recent Notices</span></div>
+          <div class="nc nu"><div class="nt">⚠ Attendance Warning</div><div class="nb">OS Lab attendance is below 75%. Attend all remaining classes to avoid detainment.</div><div class="nd">Posted: 12 Jan 2025</div></div>
+          <div class="nc ni"><div class="nt">ℹ Mid-Sem Exam Schedule</div><div class="nb">Mid-semester examinations will be held from 20–25 Jan 2025. Hall tickets available from 18 Jan.</div><div class="nd">Posted: 10 Jan 2025</div></div>
+          <div class="nc ns"><div class="nt">✅ Fee Receipt Generated</div><div class="nb">Semester IV tuition fee payment confirmed. Receipt available for download.</div><div class="nd">Posted: 8 Jan 2025</div></div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script>
+const students=[
+  {r:'21VV1A0501',n:'Ravi Kumar'},{r:'21VV1A0502',n:'Sita Reddy'},
+  {r:'21VV1A0503',n:'Arun Babu'},{r:'21VV1A0504',n:'Divya Nair'},
+  {r:'21VV1A0505',n:'Kiran Rao'},{r:'21VV1A0506',n:'Lavanya S'},
+  {r:'21VV1A0507',n:'Mohan Das'},{r:'21VV1A0508',n:'Arjun Krishnan'},
+  {r:'21VV1A0509',n:'Nandini P'},{r:'21VV1A0510',n:'Omkar T'},
+  {r:'21VV1A0511',n:'Pooja V'},{r:'21VV1A0512',n:'Manoj Kumar'},
+  {r:'21VV1A0513',n:'Ramya K'},{r:'21VV1A0514',n:'Suresh B'},
+  {r:'21VV1A0515',n:'Tejaswi R'},
+];
+
+// Valid student credentials - multiple roll numbers with their passwords
+const studentCredentials = {
+  '21VV1A0501': 'student@123',
+  '21VV1A0502': 'student@123',
+  '21VV1A0503': 'student@123',
+  '21VV1A0504': 'student@123',
+  '21VV1A0505': 'student@123',
+  '21VV1A0506': 'student@123',
+  '21VV1A0507': 'student@123',
+  '21VV1A0508': 'student@123',
+  '21VV1A0509': 'student@123',
+  '21VV1A0510': 'student@123',
+  '21VV1A0511': 'student@123',
+  '21VV1A0512': 'student@123',
+  '21VV1A0513': 'student@123',
+  '21VV1A0514': 'student@123',
+  '21VV1A0515': 'student@123'
+};
+
+// Valid faculty credentials - multiple employee IDs with their passwords
+const facultyCredentials = {
+  'VU-F-1042': 'faculty@123',
+  'VU-F-1043': 'faculty@123',
+  'VU-F-1044': 'faculty@123',
+  'VU-F-1045': 'faculty@123',
+  'VU-F-1046': 'faculty@123'
+};
+
+function showSignup(){document.getElementById('loginScreen').style.display='none';document.getElementById('signupScreen').style.display='flex';document.getElementById('su-s-name').focus();}
+function showLogin(){document.getElementById('signupScreen').style.display='none';document.getElementById('loginScreen').style.display='flex';}
+function doSignup(role){
+  const name = document.getElementById(`su-${role === 'student' ? 's' : 'f'}-name`).value.trim();
+  const email = document.getElementById(`su-${role === 'student' ? 's' : 'f'}-email`).value.trim();
+  const id = document.getElementById(`su-${role === 'student' ? 's' : 'f'}-id`).value.trim();
+  const pass = document.getElementById(`su-${role === 'student' ? 's' : 'f'}-pass`).value;
+  const confirm = document.getElementById(`su-${role === 'student' ? 's' : 'f'}-confirm`).value;
+  const err = document.getElementById(`su-${role === 'student' ? 's' : 'f'}-err`);
+  if(!name||!email||!id||!pass||!confirm){err.textContent='Please complete all fields.';err.style.display='block';return;}
+  if(pass!==confirm){err.textContent='Passwords do not match.';err.style.display='block';return;}
+  err.style.display='none';
+  if(role === 'student') studentCredentials[id] = pass;
+  else facultyCredentials[id] = pass;
+  alert(`✅ ${role === 'student' ? 'Student' : 'Faculty'} account created!\nUse ${id} to sign in.`);
+  showLogin();
+  document.getElementById(role === 'student' ? 's-roll' : 'f-id').value = id;
+  document.getElementById(role === 'student' ? 's-pass' : 'f-pass').value = pass;
+}
+
+const defMarks=[28,27,25,24,23,26,22,21,20,25,27,19,24,23,26];
+let attState={};
+students.forEach((_,i)=>attState[i]=true);
+
+function doLogin(role){
+  if(role==='student'){
+    const roll = document.getElementById('s-roll').value.trim();
+    const pass = document.getElementById('s-pass').value;
+    const ok = studentCredentials[roll] && studentCredentials[roll] === pass;
+    document.getElementById('s-err').style.display=ok?'none':'block';
+    if(ok){document.getElementById('loginScreen').style.display='none';document.getElementById('stuApp').classList.add('on');}
+  } else {
+    const id = document.getElementById('f-id').value.trim();
+    const pass = document.getElementById('f-pass').value;
+    const ok = facultyCredentials[id] && facultyCredentials[id] === pass;
+    document.getElementById('f-err').style.display=ok?'none':'block';
+    if(ok){document.getElementById('loginScreen').style.display='none';document.getElementById('facApp').classList.add('on');buildAtt();buildMarks();}
+  }
+}
+
+function logout(){
+  document.querySelectorAll('.app').forEach(a=>a.classList.remove('on'));
+  document.getElementById('loginScreen').style.display='flex';
+}
+
+function sNav(el,key){
+  document.querySelectorAll('#stuApp .sb-i').forEach(i=>i.classList.remove('act'));
+  el.classList.add('act');
+  document.querySelectorAll('#stuApp .pg').forEach(p=>p.classList.remove('act'));
+  document.getElementById('s-pg-'+key).classList.add('act');
+  const t={sd:'Dashboard',sa:'My Attendance',sr:'Exam & Results',st:'Timetable',sn:'Notices',ss:'Syllabus',sf:'Fee Status'};
+  document.getElementById('s-title').textContent=t[key]||key;
+}
+
+function fNav(el,key){
+  document.querySelectorAll('#facApp .sb-i').forEach(i=>i.classList.remove('act'));
+  el.classList.add('act');
+  document.querySelectorAll('#facApp .pg').forEach(p=>p.classList.remove('act'));
+  document.getElementById('f-pg-'+key).classList.add('act');
+  const t={fd:'Faculty Dashboard',fa:'Mark Attendance',fm:'Enter Marks',fr:'Reports',fc:'Course Material',fn:'Post Notice'};
+  document.getElementById('f-title').textContent=t[key]||key;
+}
+
+function rTab(el,id){
+  document.querySelectorAll('#rtabs .tab').forEach(t=>t.classList.remove('act'));
+  el.classList.add('act');
+  ['rp-s4','rp-s3','rp-s2','rp-s1'].forEach(s=>document.getElementById(s).style.display=s===id?'block':'none');
+}
+
+function buildAtt(){
+  const tb=document.getElementById('att-tb');tb.innerHTML='';
+  students.forEach((s,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td class="mono" style="color:var(--muted)">${i+1}</td>
+      <td class="mono">${s.r}</td><td><b>${s.n}</b></td>
+      <td><label style="cursor:pointer;display:flex;align-items:center;gap:6px">
+        <input type="radio" name="a${i}" value="1" ${attState[i]?'checked':''} onchange="tog(${i},true)" style="accent-color:var(--ok)"> Present</label></td>
+      <td><label style="cursor:pointer;display:flex;align-items:center;gap:6px">
+        <input type="radio" name="a${i}" value="0" ${!attState[i]?'checked':''} onchange="tog(${i},false)" style="accent-color:var(--err)"> Absent</label></td>
+      <td id="as${i}"><span class="bx ${attState[i]?'bg':'br'}">${attState[i]?'Present':'Absent'}</span></td>`;
+    tb.appendChild(tr);
+  });
+  updCount();
+}
+function tog(i,v){attState[i]=v;document.getElementById('as'+i).innerHTML=`<span class="bx ${v?'bg':'br'}">${v?'Present':'Absent'}</span>`;updCount();}
+function markAll(v){students.forEach((_,i)=>{attState[i]=v;document.querySelectorAll(`input[name="a${i}"][value="${v?'1':'0'}"]`).forEach(r=>r.checked=true);document.getElementById('as'+i).innerHTML=`<span class="bx ${v?'bg':'br'}">${v?'Present':'Absent'}</span>`;});updCount();}
+function updCount(){const p=Object.values(attState).filter(Boolean).length;document.getElementById('att-p').textContent=p+' Present';document.getElementById('att-a').textContent=(students.length-p)+' Absent';}
+function saveAtt(){const p=Object.values(attState).filter(Boolean).length;alert(`✅ Attendance saved!\nPresent: ${p}/${students.length} · Absent: ${students.length-p}`);}
+
+function gradeOf(m){const p=m/30*100;if(p>=90)return{g:'O',bg:'var(--ok-bg)',c:'#15803d'};if(p>=80)return{g:'A+',bg:'var(--info-bg)',c:'#1d4ed8'};if(p>=70)return{g:'A',bg:'#e0e7ff',c:'#3730a3'};if(p>=60)return{g:'B+',bg:'var(--warn-bg)',c:'#b45309'};if(p>=50)return{g:'B',bg:'#fdf3dc',c:'#92660a'};return{g:'F',bg:'var(--err-bg)',c:'#b91c1c'};}
+function buildMarks(){
+  const tb=document.getElementById('marks-tb');tb.innerHTML='';
+  students.forEach((s,i)=>{
+    const m=defMarks[i]||20,gr=gradeOf(m);
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td class="mono" style="color:var(--muted)">${i+1}</td><td class="mono">${s.r}</td><td><b>${s.n}</b></td>
+      <td><input class="mi" id="mk${i}" type="number" value="${m}" min="0" max="30" oninput="updGrade(${i})"></td>
+      <td id="gd${i}"><span style="background:${gr.bg};color:${gr.c};padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700">${gr.g}</span></td>`;
+    tb.appendChild(tr);
+  });
+}
+function updGrade(i){const m=Math.min(30,Math.max(0,parseInt(document.getElementById('mk'+i).value)||0));const gr=gradeOf(m);document.getElementById('gd'+i).innerHTML=`<span style="background:${gr.bg};color:${gr.c};padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700">${gr.g}</span>`;}
+function saveMarks(){alert('✅ Marks saved successfully!');}
+
+function uploadMaterial(){
+  const subject = document.getElementById('mat-subject').value;
+  const title = document.getElementById('mat-title').value;
+  const desc = document.getElementById('mat-desc').value;
+  const file = document.getElementById('mat-file').files[0];
+  if(!title || !file){alert('❌ Please fill all fields and select a file.');return;}
+  alert(`✅ Material "${title}" uploaded successfully for ${subject}!`);
+  // Reset form
+  document.getElementById('mat-title').value = '';
+  document.getElementById('mat-desc').value = '';
+  document.getElementById('mat-file').value = '';
+}
+
+function postNotice(){
+  const priority = document.getElementById('notice-priority').value;
+  const title = document.getElementById('notice-title').value;
+  const msg = document.getElementById('notice-msg').value;
+  const audience = document.getElementById('notice-audience').value;
+  if(!title || !msg){alert('❌ Please fill title and message.');return;}
+  alert(`✅ Notice "${title}" posted successfully to ${audience}!`);
+  // Reset form
+  document.getElementById('notice-title').value = '';
+  document.getElementById('notice-msg').value = '';
+}
+
+/* Enter key support */
+document.addEventListener('keydown', e => {
+  if(e.key !== 'Enter') return;
+  if(document.getElementById('loginScreen').style.display !== 'none' || document.getElementById('s-pass') === document.activeElement) doLogin('student');
+  if(document.getElementById('f-pass') === document.activeElement) doLogin('faculty');
+});
+</script>
+</body>
+</html>
